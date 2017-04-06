@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-
+# from django.conf import global_settings
 import os
+from .db import DATABASES, emai_user_smtp, password_user_smtp
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'crispy_forms',
 	'students',
 ]
 
@@ -63,6 +65,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+				'studentsdb.context_processors.students_proc',
+				'students.context_processors.groups_processor',
             ],
         },
     },
@@ -74,12 +78,12 @@ WSGI_APPLICATION = 'studentsdb.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '..', 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+    # # 'default': {
+        # # 'ENGINE': 'django.db.backends.sqlite3',
+        # # 'NAME': os.path.join(BASE_DIR, '..', 'db.sqlite3'),
+    # # }, 
+# }
 
 
 # Password validation
@@ -119,3 +123,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+PORTAL_URL = 'http://localhost:8000'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# email settings
+# please, set here your smtp server details and your admin email
+ADMIN_EMAIL = 'admin@studentsdb.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '465'
+EMAIL_HOST_USER = emai_user_smtp
+EMAIL_HOST_PASSWORD = password_user_smtp
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True

@@ -1,195 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<title>Students Accounting Service</title>
-		<meta name="description"
-			  value="Students School Accounting System" />
-			  
-			  <!-- Include Styles -->
-			  <link rel="stylesheet"
-					href="https://cdn.jsdelivr.net/bootstrap/3.3.0/css/bootstrap.min.css">
-					<link rel="stylesheet" href="./css/main.css">
-			  <!-- <style type="text/css">.col-xs-12, .col-xs-4, .col-xs-8 {border:1px solid red;}</style> -->
-	</head>
-	
-	<body>
-	
-		<!-- Start Container -->
-		<div class="container">
-		
-		<!-- Start Header -->
-			<div class="row" id="header">
-			
-				<!-- Logo -->
-				<div class="col-xs-8">
-					<h1>Students Accounting Service</h1>
-				</div>
-				
-				<!-- Groups Selector -->
-				<div class="col-xs-4" id="group-selector">
-					<strong>Group:</strong>
-					<select>
-						<option value="">All students</option>
-						<option value="">Yana Tkachenko (#254)</option>
-						<option value="">Masha Lytvyniuk (#1639)</option>
-						<option value="">Iryna Davydenko (#2123)</option>
-					</select>
-				</div>
-			</div>
-			<!-- End Header -->
-			
-		<!-- Updated main navigation links: Students, Attendance, Groups; attributes "href" inside "a" tags -->
-			<!-- Start SubHeader -->
-			<div class="row" id="sub-header">
-				<div class="col-xs-12">
-					<ul class="nav nav-tabs" role="tablist">
-						<li role="presentation" class="active"><a href="{% url 'home' %}">Students</a></li>
-						<li role="presentation"><a href="/journal">Attendance</a></li>
-						<li role="presentation"><a href="{% url 'groups' %}">Groups</a></li>
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %}Students{% endblock meta_title %}
+
+{% block title %}Students Base{% endblock title %}
+
+{% block content %}
+
+<a class="btn btn-primary" href="{% url 'students_add' %}">Add Student</a>
+
+<!-- Start Students Listing -->
+<table class="table">
+	{% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+	<thead>
+		<tr>
+			<th><a href="#">#</a></th>
+			<th><a href="#">Photo</a></th>
+			<th>{% if order_by == '' %}
+				<a href="{% url 'home' %}?order_by=last_name&reverse=1">
+				{% else %}
+				<a href="{% url 'home' %}?order_by=last_name
+					{% if order_by == 'last_name' and reverse != '1' %}
+						&amp;reverse=1
+					{% endif %}">
+				{% endif %}
+					Surname
+					{% if order_by == ''%}&uarr;					
+					{% elif order_by == 'last_name' and reverse != '1'%}&uarr;
+					{% elif order_by == 'last_name' and reverse == '1'%}&darr;
+					{% endif %}
+				</a></th>
+			<th><a href="{% url 'home' %}?order_by=first_name">Name</a></th>
+			<th><a href="{% url 'home' %}?order_by=ticket">Exam question</a></th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	{% endwith %}
+	<tbody>
+		{% for student in students %}
+		<tr>
+			<td>{{ forloop.counter }}</td>
+			<td>
+				{% if student.photo %}
+				<img height="30" width="30" class="img-circle" src="{{ student.photo.url }}">
+				{% else %}
+				<img height="30" width="30" class="img-circle" src="{% static 'img/default_user.png' %}">
+				{% endif %}
+			</td>
+			<td><a href="{% url 'students_edit' student.id %}" class="student-edit-form-link">{{student.last_name}}</td>
+			<td><a href="{% url 'students_edit' student.id %}" class="student-edit-form-link">{{student.first_name}}</td>
+			<td>{{student.ticket}}</td>
+			<td>
+				<div class="btn-group">
+					<button class="btn btn-default dropdown-toggle"
+							type="button" data-toggle="dropdown">Action<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="{% url 'students_edit' student.id %}" class="student-edit-form-link">Edit</a></li>
+						<li><a href="{% url 'journal' student.id %}">Attendance</a></li>
+						<li><a href="{% url 'students_delete' student.id %}">Delete</a></li>
 					</ul>
 				</div>
-			</div>
-			
-			<!-- Start Main Page Content -->
-			<div class="row" id="content-columns">
-				
-				<div class="col-xs-12" id="content-column">
-					
-					<!-- Status Message -->
-					<div class="alert alert-warning">Changes cancelled.</div>
-					
-				<!-- Updated button address -  Add Student -->
-					<h2>Students Range</h2>
-					<a class="btn btn-primary" href="{% url 'students_add' %}">Add Student</a>
-					
-					<div>
-						<table class="table table-hover table-striped">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Photo</th>
-									<th>Surname</th>
-									<th>Name</th>
-									<th>Exam question number</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-							
-							<!-- Updated actions links over student and links for student's name and surname -->
-								<tr>
-									<td>1</td>
-									<td><img height="30" width="30" class="img-circle" src="./img/iryna_davydenko.jpg"</td>
-									
-									<td><a title="Edit" href="{% url 'students_edit' 1 %}">Davydenko</td>
-									<td><a title="Edit" href="{% url 'students_edit' 1 %}">Iryna</td>
-									<td>2123</td>
-									<td>
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle"
-													type="button" data-toggle="dropdown">Action<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu" role="menu">
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="/journal/1">Attendance</a>
-												</li>
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="{% url 'students_edit' 1 %}">Edit</a>
-												</li>
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="{% url 'students_delete' 1 %}">Delete</a>
-												</li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>2</td>
-									<td><img height="30" width="30" class="img-circle" src="./img/yana_ibrahimova.jpg".></td>
-									<td><a title="Edit" href="#">Ibrahimova</td>
-									<td><a title="Edit" href="#">Yana</td>
-									<td>254</td>
-									<td>
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle"
-													type="button" data-toggle="dropdown">Action<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu" role="menu">
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="#">Attendance</a>
-												</li>
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="#">Edit</a>
-												</li>
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="#">Delete</a>
-												</li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>3</td>
-									<td><img height="30" width="30" class="img-circle" src="./img/masha_lytvyniuk.jpg"/></td>
-									<td><a title="Edit" href="#">Lytvyniuk</td>
-									<td><a title="Edit" href="#">Masha</td>
-									<td>1639</td>
-									<td>
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle"
-													type="button" data-toggle="dropdown">Action<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu" role="menu">
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="#">Attendance</a>
-												</li>
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="#">Edit</a>
-												</li>
-												<li role="presentation">
-													<a role="menuitem" tabindex="-1" href="#">Delete</a>
-												</li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<!-- End Students Listing -->
-						
-						<nav>
-							<ul class="pagination">
-								<li><a href="#">&laquo;</a></li>
-								<li><a href="#">1</a></li>
-								<li class="active"><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#">5</a></li>
-								<li><a href="#">&raquo;</a></li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-				
-			</div>
-			<!-- End Main Page Content -->
-			
-			<!-- Start Footer -->
-			<div class="row" id="footer">
-				<div class="col-xs-12">
-					&copy; 2014 Students Accounting Service
-				</div>
-				<!-- End Footer -->
-				
-			</div>
-			<!-- End Container -->
-	
-		
-		<!-- Javascripts Section -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
-		<script src="https://cdn.jsdelivr.net/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-		
-	</body>
-	
-</html>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<!-- End Students Listing -->
+
+{% include "students/pagination_old.html" %}
+
+{% endblock content %}

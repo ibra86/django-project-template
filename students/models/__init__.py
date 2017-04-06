@@ -1,0 +1,1 @@
+from .monthjournal_model import MonthJournal

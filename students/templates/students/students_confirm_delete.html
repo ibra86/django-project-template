@@ -1,0 +1,31 @@
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %}Delete Student{% endblock meta_title %}
+
+{% block title %}Delete Student{% endblock title %}
+
+{% block status_message %}
+	{% if form.errors %}
+	<div class='alert alert-warning' role='alert'>
+		Please, correct the following errors
+	</div>
+	{% endif %}
+{% endblock status_message %}
+
+
+{% block content %}
+
+<form action="{% url 'students_delete' object.id %}" method="POST" enctype="multipart/form-data"/>
+	{% csrf_token %}
+	
+	<p>Do you really want delete student"{{ object }}"?</p>
+	<input type='submit' value='Yes' name='delete_button' class='btn btn-danger' /><br /><br />
+</form>
+
+{% endblock content %}
+
+{% comment %}
+
+{% endcomment %}

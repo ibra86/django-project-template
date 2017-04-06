@@ -1,0 +1,35 @@
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block meta_title %}Edit Student{% endblock meta_title %}
+
+{% block title %}Edit Student{% endblock title %}
+
+{% block status_message %}
+	{% if form.errors %}
+	<div class='alert alert-warning' role='alert'>
+		Please, correct the following errors
+	</div>
+	{% endif %}
+{% endblock status_message %}
+
+
+{% block content %}
+
+{% crispy form %}
+
+
+{% endblock content %}
+
+{% comment %}
+<form action="{% url 'students_edit' object.id %}" method="POST" enctype="multipart/form-data"/>
+	{% csrf_token %}
+	
+	{{ form.as_p }}
+	
+	<input type='submit' value='Save' name='add_button' class='btn btn-primary' />
+	<button type='submit' name='cancel_button' value='Cancel' class='btn btn-link'>Cancel</button>
+</form>
+{% endcomment %}

@@ -1,0 +1,49 @@
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %}Groups{% endblock meta_title %}
+
+{% block title %}Groups List{% endblock title %}
+
+{% block content %}
+
+<a class="btn btn-primary" href="{% url 'groups_add' %}">Add Group</a>
+
+<!-- Start Groups Listing -->
+<table class="table">
+	<thead>
+		<tr>
+			<th><a href="#">#</a></th>
+			<th><a href="#">Title</a></th>
+			<th><a href="#">Leader</a></th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for group in groups %}
+		<tr>
+			<td>{{ forloop.counter }}</td>
+			<td><a title="Edit" href="{% url 'groups_edit' group.id %}">{{group.title}}</td>
+			<td><a title="Edit" href="{% url 'groups_edit' group.id %}">{{group.leader}}</td>
+			<td>
+				<div class="btn-group">
+					<button class="btn btn-default dropdown-toggle"
+							type="button" data-toggle="dropdown">Action<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="{% url 'groups_edit' group.id %}">Edit</a></li>
+						<li><a href="/journal/{{ group.id }}">Attendance</a></li>
+						<li><a href="{% url 'groups_delete' group.id %}">Delete</a></li>
+					</ul>
+				</div>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<!-- End Students Listing -->
+
+{% include "students/pagination_old.html" %}
+
+{% endblock content %}

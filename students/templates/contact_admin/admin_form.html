@@ -1,0 +1,32 @@
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block meta_title %}Contact with Admin{% endblock meta_title %}
+
+{% block title %}Contact with Admin{% endblock title %}
+
+
+{% block status_message %}
+{% if form.errors %}
+<div class='alert alert-warning' role='alert'>Correct please the following errors</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+
+{% crispy form %}
+
+{% endblock content %}
+
+
+
+{% comment %}
+<form action="{% url 'contact_admin'%}" method='POST'>
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type='submit' value='Send' name='send_button'>
+{% endcomment %}
